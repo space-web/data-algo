@@ -1,0 +1,164 @@
+/******************************************************************************
+
+Crear una lista con tres numeros enteros que termina con el primer valor en 0. Mostrarla.
+
+Generar otra lista con la suma de los tres numeros del nodo si la suma de los mismos supera a 10.
+
+Insertar antes de cada nodo otro nodo con la mitad de cada valor del nodo.
+
+Eliminar aquellos nodos cuya productoria es menor a 30.
+
+*******************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct lista{
+	float num1;
+	float num2;
+	float num3;
+	struct lista *sig;
+ }nodo;
+
+typedef struct lista2{
+    float num;
+    struct lista2 *sig;
+}nodo2;
+
+void crear (nodo *pt);
+void mostrar(nodo *pt);
+void generar(nodo* ,nodo2*);
+nodo* insertar1(nodo* );
+nodo* eliminar1(nodo* );
+void insertar2 (nodo* );
+void eliminar2(nodo* );
+
+
+int main()
+{
+
+    nodo *prin=NULL;
+    nodo2 *q=NULL;
+    prin=(nodo*)malloc(sizeof(nodo));
+    q = (nodo2*)malloc(sizeof(nodo2));
+    crear(prin);
+    printf("Lista:\n");
+    mostrar (prin);
+    generar(prin,q);
+    prin=insertar1(prin);
+    insertar2(prin);
+    printf("Lista con insertados:\n");
+    mostrar(prin);
+    prin=eliminar1(prin);
+    eliminar2(prin);
+    printf("Lista con eliminados:\n");
+    mostrar(prin);
+
+    return 0;
+}
+
+void crear (nodo *registro)
+{
+    printf("Ingrese el primer numero:");
+    scanf("%f",&registro->num1);
+
+    if (registro->num1==0)
+        registro->sig=NULL;
+    else
+	{
+        printf("Ingrese segundo numero:");
+        scanf("%f",&registro->num2);
+        printf("Ingrese tercer numero:");
+        scanf("%f",&registro->num3);
+        registro->sig=(nodo*)malloc(sizeof(nodo));
+        crear (registro->sig);
+
+	}
+	return;
+}
+
+void mostrar (nodo *registro)
+{
+    if (registro->sig !=NULL)
+	{
+        printf ("%f\t",registro->num1);
+        printf("%f\t", registro->num2);
+        printf("%f\n", registro->num3);
+        mostrar (registro->sig);
+	}
+	return;
+}
+
+void generar(nodo *registro, nodo2 *q){
+    while(registro->sig != NULL){
+        if((registro->num1 + registro->num2 + registro->num3) > 10 ){
+            q->num=(registro->num1) + (registro->num2) + (registro->num3);
+            q->sig=(nodo2*)malloc(sizeof(nodo2));
+            q = q->sig;
+            registro= registro->sig;
+        }
+        else{
+            registro= registro->sig;
+        }
+    }
+    q->sig=NULL;
+}
+
+nodo* insertar1(nodo *p)
+{
+    nodo *aux;
+    {
+        aux=(nodo *)malloc(sizeof(nodo));
+        aux->num1=((p->num1)/2);
+        aux->num2=((p->num2)/2);
+        aux->num3=((p->num3)/2);
+        aux->sig=p;
+        p=aux;
+    }
+    return p;
+}
+
+void insertar2(nodo *p)
+{nodo *aux;
+    p=p->sig;
+    while(p->sig!=NULL  && p->sig->sig != NULL)
+    {
+        
+            aux=(nodo *)malloc(sizeof(nodo));
+            aux->num1=((p->sig->num1)/2);
+            aux->num2= ((p->sig->num2)/2);
+            aux->num3=((p->sig->num3)/2);
+            aux->sig=p->sig;
+            p->sig=aux;
+            
+        p=p->sig->sig;
+    }
+}
+
+nodo* eliminar1(nodo* p)
+{nodo *aux;
+    while(((p->num1) * ( p->num2 )* (p->num3)) <30 )//condicion de eliminacion
+    {
+        aux=p->sig;
+        free(p);
+        p=aux;
+
+    }
+    return p;
+}
+void eliminar2(nodo* p)
+{nodo *aux;
+    while(p->sig!=NULL&& p->sig->sig!=NULL)
+    {
+        if(((p->sig->num1) * ( p->sig->num2 )* (p->sig->num3)) <30)//condicion de eliminacion
+        {
+            aux=p->sig->sig;
+            free(p->sig);
+            p->sig=aux;
+        }
+        else
+        {
+            p=p->sig;
+        }
+    }
+
+}
