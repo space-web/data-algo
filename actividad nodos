@@ -1,0 +1,157 @@
+/******************************************************************************
+Mostrar dicha lista (la carga finaliza con 0 en el primer número ingresado).
+Si la suma de los tres números del nodo es mayor a 20, insertar antes de cada
+nodo el doble de cada valor del nodo.
+Generar una nueva lista con el promedio de cada nodo ( es decir si el nodo contiene
+3 4 5 se debe generar un nodo con 4) . Mostrar dicha lista.
+*******************************************************************************/
+#include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct lista{
+int num;
+
+int num1;
+
+int num3;
+
+struct lista *sig;
+}nodo;
+
+typedef struct lista2{
+
+float p;
+
+struct lista2 *sig;
+
+}nodo2;
+
+
+void crear (nodo *pt);
+
+void mostrar(nodo *pt);
+
+void insertar(nodo *pt);
+
+void generar(nodo *pt, nodo2 *pt2);
+
+void mostrar_lista(nodo2 *);
+
+
+
+ 
+
+int main()
+
+{
+
+int i=0;
+
+nodo *prin;
+
+nodo2 *q=NULL;
+
+prin=(nodo*)malloc(sizeof(nodo));
+
+q=(nodo2*)malloc(sizeof(nodo2));
+
+crear(prin);
+
+mostrar (prin);
+
+insertar(prin);
+
+mostrar (prin);
+
+generar(prin,q);
+
+mostrar_lista(q);
+return 0;
+}
+
+void crear (nodo *q)
+{
+
+    printf("Ingrese numero: ");
+    scanf("%d",&q->num);
+    if (q->num==0)
+    q->sig=NULL;
+
+    else{
+        printf("Ingrese numero 1:");
+        scanf("%d",&q->num1);
+        printf("Ingrese numero 3:");
+        scanf("%d",&q->num3);
+
+        q->sig=(nodo*)malloc(sizeof(nodo));
+
+        crear (q->sig);
+    }
+
+  return;
+
+}
+
+
+
+void mostrar (nodo *q)
+
+{
+
+    if (q->sig !=NULL){
+
+        printf ("%d\n",q->num);
+
+        printf("%d\n",q->num1);
+
+        printf("%d\n",q->num3);
+
+        mostrar (q->sig);
+    }
+  return;
+}
+
+
+
+void insertar(nodo *q){
+
+    nodo *a = NULL;
+    while(q->sig != NULL){
+
+        if(((q->sig->num)+(q->sig->num1)+(q->sig->num3))>20){
+
+            a = (nodo*)malloc(sizeof(nodo));
+            a->num=(q->sig->num)*2;
+            a->num1=(q->sig->num1)*2;
+            a->num3=(q->sig->num3)*2;
+            a->sig=q->sig;
+            q->sig=a;
+            q=q->sig;
+        }
+        q=q->sig;
+    }
+}
+
+void generar(nodo *pri, nodo2 *q){
+
+    while (pri->sig != NULL){
+
+        q->p= ((pri->num)+(pri->num1)+(pri->num3))/3;
+        q->sig = (nodo2*)malloc(sizeof(nodo2));
+        q = q->sig;
+        pri = pri->sig;
+    }
+
+    q->sig =NULL;
+}
+
+void mostrar_lista(nodo2 *q){  
+    while (q->sig !=NULL){
+        printf ("%f\n",q->p);
+        q= q->sig;
+        
+    }
+  return;
+}
