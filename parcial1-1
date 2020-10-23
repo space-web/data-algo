@@ -1,0 +1,127 @@
+/*
+a)	Crear y mostrar la lista con números enteros. Termina con num=-2.
+b)	Insertar en otra lista los números impares. Mostrarla.
+c)	Eliminar todos los valores menores al promedio de la lista original en la 
+lista de números impares. Mostrarla
+ 
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct lista
+{
+    int numero;
+    struct lista *sig;
+}nodonumeros;
+
+void crearlista(nodonumeros *p)
+{
+    printf("Ingrese un numero: ");
+    scanf("%d",&p->numero);
+    if (p->numero==(-2))
+    {
+        p->sig=NULL;
+    }
+    else
+    {
+        p->sig=(nodonumeros*)malloc(sizeof(nodonumeros));
+        crearlista(p->sig);
+    }
+}
+
+void mostrarlista (nodonumeros *p)
+{
+    if (p->sig!=NULL)
+    {
+        printf("El numero ingresado fue %d \n:",p->numero);
+        mostrarlista(p->sig);
+    }
+
+}
+void listaimpar(nodonumeros *p,nodonumeros *q)
+{   
+    while (p->sig!=NULL)
+    {
+       if (p->numero%2!=0)
+       {
+            q->numero=p->numero;
+            q->sig=(nodonumeros*)malloc(sizeof(nodonumeros));
+            q=q->sig;
+            p=p->sig;
+       }
+       else
+       {
+           p=p->sig;
+       }
+    }           
+    q->sig=NULL;   
+}
+int promedio(nodonumeros *p)
+{   
+    int acum=0;
+    int i=0;
+    while (p->sig != NULL)
+    {
+        acum=acum+p->numero;
+        i++;
+        p=p->sig;
+    }
+    return (acum=acum/i);
+}
+
+nodonumeros* eliminar1 (int prom, nodonumeros *q) // MIRAR DE NUEVO ESTA PARTE DEL CODIGO
+{
+    nodonumeros *aux=NULL;
+   
+        while(q->numero< prom)
+        {
+            aux=q->sig;
+            free(q);
+            q=aux;
+        }
+        
+    
+    return q;
+}
+void eliminar2(int prom,nodonumeros *q) 
+{   
+    nodonumeros *aux=NULL;
+    while (q->sig != NULL && q->sig->sig != NULL)
+    {
+        if (q->sig->numero < prom)
+        {
+            aux=q->sig->sig;
+            free(q->sig);
+            q->sig=aux;
+        }
+        else
+        {
+            q=q->sig;
+        }
+    }
+}
+
+int main()
+{   
+    int prom=0;
+    nodonumeros *p=NULL;
+    nodonumeros *q=NULL;
+    q=(nodonumeros*)malloc(sizeof(nodonumeros));
+    p=(nodonumeros*)malloc(sizeof(nodonumeros));
+    crearlista(p);
+    printf("La lista principal es : \n");
+    mostrarlista(p);
+    listaimpar(p,q);
+    printf("La Lista de numeros impares son: \n");
+    mostrarlista(q);
+    prom=promedio(p);
+    printf("El promedio de la lista principal es : %d \n",prom);
+    q=eliminar1(prom,q);
+    eliminar2(prom,q);
+    printf("Los valores menores al promedio de la lista impar son: \n");
+    if (q->sig!=NULL|| q!=NULL)
+       mostrarlista(q);
+    else
+      printf("la lista quedo vacia");   
+}
+
